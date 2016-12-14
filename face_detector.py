@@ -40,6 +40,7 @@ class FaceDetector:
         self.frame_captured.wait()
         while True:
             try:
+                #face detection algo will run here
                 item = self.raw_frames.get(True, 1)
             except queue.Empty:
                 self.frame_captured.clear()
