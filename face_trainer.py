@@ -23,23 +23,25 @@ class TrainFisherFaces:
             os.mkdir(self.path)
         self.model = cv2.face.createFisherFaceRecognizer()
         self.count_captures = 0
-        self.count_timer = 0
+        self.count_timer = -1
 
     def capture_training_images(self, webcam_id):
         """It captures video from a webcame with a given id"""
         try:
             capturer = VideoCapturer(webcam_id)
-            capturer.capture(self.process_image)
-            if self.are_enough_faces():
-                self.fisher_train_data()
+            capturer.capture(self._process_image)
+            if self._are_enough_faces():
+                self._fisher_train_data()
                 print("Type in next user to train, or you can start recognition")
             else:
-                print("Type in next user to train, or you can start recognition")
+                print(
+                    "Type in next user to train. I can't start recognition while I know only 1 person!")
         except ValueError as err:
             print("Error occure: {0}".format(err))
 
-    def process_image(self, input_img):
+    def _process_image(self, input_img):
         """It detects face on the image"""
+        self.count_timer += 1
         frame = cv2.flip(input_img, 1)
         resized_width, resized_height = (112, 92)
         if self.count_captures < NUM_TRAINING:
@@ -87,7 +89,7 @@ class TrainFisherFaces:
 
         return frame
 
-    def are_enough_faces(self):
+    def _are_enough_faces(self):
         """It determines whether it is enough captured faces or not"""
         existing_faces = 0
         for (subdirs, dirs, files) in os.walk(self.face_dir):
@@ -99,7 +101,7 @@ class TrainFisherFaces:
         else:
             return False
 
-    def fisher_train_data(self):
+    def _fisher_train_data(self):
         """It trains classifier"""
         imgs = []
         tags = []

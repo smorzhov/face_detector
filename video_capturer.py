@@ -21,6 +21,26 @@ class VideoCapturer:
         self.reading_stopped = threading.Event()
         self.reading_stopped.clear()
 
+    def capture(self, process_func):
+        """It captures video from a web camera"""
+        reading = threading.Thread(target=self._reading_frames)
+        reading.start()
+        processing = threading.Thread(
+            target=self._process_frames, args=(process_func,))
+        processing.start()
+        showing = threading.Thread(target=self._show_frames)
+        showing.start()
+        # waiting until all threads finish their work
+        reading.join()
+        processing.join()
+        showing.join()
+
+    @staticmethod
+    def release_capture(capture):
+        """It releases the capture"""
+        capture.release()
+        cv2.destroyAllWindows()
+
     def _reading_frames(self):
         """It reads frames and puts them into the queue"""
         capture = cv2.VideoCapture(self.webcam_id)
@@ -64,24 +84,4 @@ class VideoCapturer:
                 self.processed_frames.task_done()
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     self.reading_stopped.set()
-        cv2.destroyAllWindows()
-
-    def capture(self, process_func):
-        """It captures video from a web camera"""
-        reading = threading.Thread(target=self._reading_frames)
-        reading.start()
-        processing = threading.Thread(
-            target=self._process_frames, args=(process_func,))
-        processing.start()
-        showing = threading.Thread(target=self._show_frames)
-        showing.start()
-        #waiting until all threads finish their work
-        reading.join()
-        processing.join()
-        showing.join()
-
-    @staticmethod
-    def release_capture(capture):
-        """It releases the capture"""
-        capture.release()
         cv2.destroyAllWindows()
