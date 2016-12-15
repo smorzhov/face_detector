@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 
 
-class FaceDetector:
+class VideoCapturer:
     """It recognize faces in video"""
 
     def __init__(self, webcam_id):
@@ -31,23 +31,21 @@ class FaceDetector:
                 if not self.frame_captured.isSet():
                     self.frame_captured.set()
             else:
-                FaceDetector.release_capture(capture)
+                VideoCapturer.release_capture(capture)
                 return
         capture.release()
 
-    def _process_frames(self):
+    def _process_frames(self, process_func):
         """It processes frames"""
         self.frame_captured.wait()
         while True:
             try:
-                #face detection algo will run here
                 item = self.raw_frames.get(True, 1)
             except queue.Empty:
                 self.frame_captured.clear()
                 break
             else:
-                self.processed_frames.put(
-                    cv2.cvtColor(item, cv2.COLOR_BGR2GRAY))
+                self.processed_frames.put(process_func(item))
                 self.raw_frames.task_done()
                 if not self.frame_processed.isSet():
                     self.frame_processed.set()
@@ -68,15 +66,16 @@ class FaceDetector:
                     self.reading_stopped.set()
         cv2.destroyAllWindows()
 
-    def capture(self):
+    def capture(self, process_func):
         """It captures video from a web camera"""
         reading = threading.Thread(target=self._reading_frames)
         reading.start()
-        processing = threading.Thread(target=self._process_frames)
+        processing = threading.Thread(
+            target=self._process_frames, args=(process_func,))
         processing.start()
         showing = threading.Thread(target=self._show_frames)
         showing.start()
-
+        #waiting until all threads finish their work
         reading.join()
         processing.join()
         showing.join()
