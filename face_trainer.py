@@ -34,8 +34,8 @@ class TrainFisherFaces:
                 self._fisher_train_data()
                 print("Type in next user to train, or you can start recognition")
             else:
-                print(
-                    "Type in next user to train. I can't start recognition while I know only 1 person!")
+                print("Type in next user to train.")
+                print("I can't start recognition while I know only 1 person!")
         except ValueError as err:
             print("Error occure: {0}".format(err))
 

@@ -23,15 +23,16 @@ class VideoCapturer:
 
     def capture(self, process_func):
         """It captures video from a web camera"""
-        reading = threading.Thread(target=self._reading_frames)
-        reading.start()
+        #reading = threading.Thread(target=self._read_frames)
+        #reading.start()
         processing = threading.Thread(
             target=self._process_frames, args=(process_func,))
         processing.start()
         showing = threading.Thread(target=self._show_frames)
         showing.start()
         # waiting until all threads finish their work
-        reading.join()
+        #reading.join()
+        self._read_frames()
         processing.join()
         showing.join()
 
@@ -41,7 +42,7 @@ class VideoCapturer:
         capture.release()
         cv2.destroyAllWindows()
 
-    def _reading_frames(self):
+    def _read_frames(self):
         """It reads frames and puts them into the queue"""
         capture = cv2.VideoCapture(self.webcam_id)
         while not self.reading_stopped.isSet():
