@@ -1,40 +1,44 @@
-import numpy as np
-import cv2
-import sys
+from abc import ABCMeta, abstractmethod
 import os
+import cv2
+import numpy as np
 from video_capturer import VideoCapturer
 
 FREQ_DIV = 5  # frequency divider for capturing training images
 RESIZE_FACTOR = 4
 NUM_TRAINING = 100
 
+class FaceTrainer:
+    """Base face trainer class"""
 
-class TrainEigenFaces:
-    """It trains classifier to detect a person's face"""
+    __metaclass__ = ABCMeta
 
-    def __init__(self, face_name):
+    @abstractmethod
+    def __init__(self, face_name, face_dir, casc_path):
         """TrainFisherFaces constructor"""
-        casc_path = "haarcascade_frontalface_default.xml"
         self.face_cascade = cv2.CascadeClassifier(casc_path)
-        self.face_dir = 'face_data'
+        self.face_dir = face_dir
         self.face_name = face_name
         self.path = os.path.join(self.face_dir, self.face_name)
         if not os.path.isdir(self.path):
-            os.mkdir(self.path)
-        self.model = cv2.createEigenFaceRecognizer()
+            os.makedirs(self.path)
         self.count_captures = 0
         self.count_timer = -1
+        self.model = None
 
-    def capture_training_images(self, webcam_id):
+
+    @abstractmethod
+    def capture_training_images(self, webcam_id, training_data_path):
         """It captures video from a webcame with a given id"""
         try:
             capturer = VideoCapturer(webcam_id)
-            capturer.capture(self._process_image)
-            self._train_data()
+            capturer.capture(self.process_image)
+            self.train_data(training_data_path)
         except ValueError as err:
             print("Error occure: {0}".format(err))
 
-    def _process_image(self, input_img):
+    @abstractmethod
+    def process_image(self, input_img):
         """It detects face on the image"""
         frame = cv2.flip(input_img, 1)
         resized_width, resized_height = (112, 92)
@@ -80,12 +84,13 @@ class TrainEigenFaces:
                 cv2.putText(frame, self.face_name, (x - 10, y - 10),
                             cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         elif self.count_captures == NUM_TRAINING:
-            print("Enough data was captured. Press 'q' to continue ...")
+            print("Enough data has been captured. Press 'q' to continue ...")
             self.count_captures += 1
 
         return frame
 
-    def _train_data(self):
+    @abstractmethod
+    def train_data(self, training_data_path):
         """It trains classifier"""
         imgs = []
         tags = []
@@ -104,6 +109,7 @@ class TrainEigenFaces:
         print("Training ...")
         self.model.train(imgs, tags)
         print("Saving result ...")
-        self.model.save('eigen_trained_data.xml')
+        self.model.save(training_data_path)
         print("Completed successfully!")
         return
+        
