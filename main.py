@@ -1,6 +1,6 @@
 import argparse
-from face_trainer import TrainFisherFaces
-from face_recognizer import RecognizeFisherFaces
+from face_trainer import TrainEigenFaces
+from face_recognizer import RecognizeEigenFaces
 
 
 def main():
@@ -13,11 +13,11 @@ def main():
     parser.add_argument("-c", "--camera-id", nargs='?', help="camera id", default=0, type=int)
     args = parser.parse_args()
     if args.train:
-        trainer = TrainFisherFaces(args.train)
+        trainer = TrainEigenFaces(args.train)
         trainer.capture_training_images(args.camera_id)
         return
     if args.recognize:
-        recognizer = RecognizeFisherFaces()
+        recognizer = RecognizeEigenFaces()
         recognizer.recognize(args.camera_id)
         return
 

@@ -9,7 +9,7 @@ RESIZE_FACTOR = 4
 NUM_TRAINING = 100
 
 
-class TrainFisherFaces:
+class TrainEigenFaces:
     """It trains classifier to detect a person's face"""
 
     def __init__(self, face_name):
@@ -21,7 +21,7 @@ class TrainFisherFaces:
         self.path = os.path.join(self.face_dir, self.face_name)
         if not os.path.isdir(self.path):
             os.mkdir(self.path)
-        self.model = cv2.face.createFisherFaceRecognizer()
+        self.model = cv2.createEigenFaceRecognizer()
         self.count_captures = 0
         self.count_timer = -1
 
@@ -30,18 +30,12 @@ class TrainFisherFaces:
         try:
             capturer = VideoCapturer(webcam_id)
             capturer.capture(self._process_image)
-            if self._are_enough_faces():
-                self._fisher_train_data()
-                print("Type in next user to train, or you can start recognition")
-            else:
-                print("Type in next user to train.")
-                print("I can't start recognition while I know only 1 person!")
+            self._train_data()
         except ValueError as err:
             print("Error occure: {0}".format(err))
 
     def _process_image(self, input_img):
         """It detects face on the image"""
-        self.count_timer += 1
         frame = cv2.flip(input_img, 1)
         resized_width, resized_height = (112, 92)
         if self.count_captures < NUM_TRAINING:
@@ -53,9 +47,10 @@ class TrainFisherFaces:
                 scaleFactor=1.1,
                 minNeighbors=5,
                 minSize=(30, 30),
-                flags=cv2.CASCADE_SCALE_IMAGE
+                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
             )
             if len(faces) > 0:
+                self.count_timer += 1
                 areas = []
                 for (x, y, w, h) in faces:
                     areas.append(w * h)
@@ -75,6 +70,7 @@ class TrainFisherFaces:
                     self.path) if fn[0] != '.'] + [0])[-1] + 1
 
                 if self.count_timer % FREQ_DIV == 0:
+                    self.count_timer = -1
                     cv2.imwrite('%s/%s.png' %
                                 (self.path, img_no), face_resized)
                     self.count_captures += 1
@@ -84,24 +80,12 @@ class TrainFisherFaces:
                 cv2.putText(frame, self.face_name, (x - 10, y - 10),
                             cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0))
         elif self.count_captures == NUM_TRAINING:
-            print("Training data captured. Press 'q' to exit.")
+            print("Enough data was captured. Press 'q' to continue ...")
             self.count_captures += 1
 
         return frame
 
-    def _are_enough_faces(self):
-        """It determines whether it is enough captured faces or not"""
-        existing_faces = 0
-        for (subdirs, dirs, files) in os.walk(self.face_dir):
-            for subdir in dirs:
-                existing_faces += 1
-
-        if existing_faces > 1:
-            return True
-        else:
-            return False
-
-    def _fisher_train_data(self):
+    def _train_data(self):
         """It trains classifier"""
         imgs = []
         tags = []
@@ -117,8 +101,9 @@ class TrainFisherFaces:
                     tags.append(int(tag))
                 index += 1
         (imgs, tags) = [np.array(item) for item in [imgs, tags]]
-
+        print("Training ...")
         self.model.train(imgs, tags)
-        self.model.save('fisher_trained_data.xml')
-        print("Training completed successfully")
+        print("Saving result ...")
+        self.model.save('eigen_trained_data.xml')
+        print("Completed successfully!")
         return

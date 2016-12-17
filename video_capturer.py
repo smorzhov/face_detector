@@ -1,5 +1,5 @@
 import threading
-import queue
+import Queue
 import numpy as np
 import cv2
 
@@ -16,8 +16,8 @@ class VideoCapturer:
         self.frame_captured.clear()
         self.frame_processed = threading.Event()
         self.frame_processed.clear()
-        self.raw_frames = queue.Queue()
-        self.processed_frames = queue.Queue()
+        self.raw_frames = Queue.Queue()
+        self.processed_frames = Queue.Queue()
         self.reading_stopped = threading.Event()
         self.reading_stopped.clear()
 
@@ -62,7 +62,7 @@ class VideoCapturer:
         while True:
             try:
                 item = self.raw_frames.get(True, 1)
-            except queue.Empty:
+            except Queue.Empty:
                 self.frame_captured.clear()
                 break
             else:
@@ -77,7 +77,7 @@ class VideoCapturer:
         while True:
             try:
                 item = self.processed_frames.get(True, 1)
-            except queue.Empty:
+            except Queue.Empty:
                 self.frame_processed.clear()
                 break
             else:
