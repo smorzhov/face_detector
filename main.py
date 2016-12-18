@@ -28,10 +28,10 @@ def main():
     except ValueError as error:
         print(error)
         return
-    if args.eigen:
-        algo_type = 'eigen'
-    else:
+    if args.fisher:
         algo_type = 'fisher'
+    else:
+        algo_type = 'eigen'
     if args.train:
         trainer = assign_trainer(algo_type, args.train, config)
         trainer.capture_training_images(
