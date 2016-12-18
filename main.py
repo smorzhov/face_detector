@@ -24,7 +24,7 @@ def main():
                         help="camera id", default=0, type=int)
     args = parser.parse_args()
     try:
-        config = load_config('config.json')
+        config = load_config('./config.json')
     except ValueError as error:
         print(error)
         return

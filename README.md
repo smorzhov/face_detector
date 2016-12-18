@@ -1,4 +1,4 @@
-# face_detector
+# Face detector
 ## Application that recognizes people's faces using Eigen or Fisher algorithms
 
 Help:         `main.py -h`
