@@ -36,13 +36,13 @@ def main():
         trainer = assign_trainer(algo_type, args.train, config)
         trainer.capture_training_images(
             args.camera_id,
-            config['eigen']['path'] + config['eigen']['training_data'])
+            config[algo_type]['path'] + config[algo_type]['training_data'])
         return
     if args.recognize:
         recognizer = assign_recognizer(algo_type, config)
         recognizer.recognize(
             args.camera_id,
-            config['eigen']['path'] + config['eigen']['training_data'])
+            config[algo_type]['path'] + config[algo_type]['training_data'])
         return
 
 
@@ -66,7 +66,7 @@ def assign_recognizer(recognizer_type, config):
     """It assignes recognizer"""
     if recognizer_type is 'fisher':
         return FisherFacesRecognizer(
-            config['eigen']['path'] + config['eigen']['face_data'],
+            config['fisher']['path'] + config['fisher']['face_data'],
             config['cascade_path'])
     elif recognizer_type is 'eigen':
         return EigenFacesRecognizer(

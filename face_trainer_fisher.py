@@ -30,7 +30,7 @@ class FisherFaceTrainer(FaceTrainer):
 
     def process_image(self, input_img):
         """It detects face on the image"""
-        super(FisherFaceTrainer, self).process_image(input_img)
+        return super(FisherFaceTrainer, self).process_image(input_img)
 
     def are_enough_faces(self):
         """Were there enough faces captured"""

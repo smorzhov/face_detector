@@ -17,7 +17,7 @@ class EigenFaceTrainer(FaceTrainer):
 
     def process_image(self, input_img):
         """It detects face on the image"""
-        super(EigenFaceTrainer, self).process_image(input_img)
+        return super(EigenFaceTrainer, self).process_image(input_img)
 
     def train_data(self, training_data_path):
         """It trains classifier"""
