@@ -17,6 +17,7 @@ class FaceTrainer:
     def __init__(self, face_name, face_dir, casc_path):
         """TrainFisherFaces constructor"""
         self.face_cascade = cv2.CascadeClassifier(casc_path)
+        self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         self.face_dir = face_dir
         self.face_name = face_name
         self.path = os.path.join(self.face_dir, self.face_name)
@@ -76,7 +77,7 @@ class FaceTrainer:
                 if self.count_timer % FREQ_DIV == 0:
                     self.count_timer = -1
                     cv2.imwrite('%s/%s.png' %
-                                (self.path, img_no), face_resized)
+                                (self.path, img_no), self.clahe.apply(face_resized))
                     self.count_captures += 1
                     print("Captured image: {0}".format(self.count_captures))
 

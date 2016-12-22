@@ -13,6 +13,7 @@ class FaceRecognizer:
     def __init__(self, face_dir, casc_path):
         """RecognizeFisherFaces constructor"""
         self.face_cascade = cv2.CascadeClassifier(casc_path)
+        self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         self.face_dir = face_dir
         self.face_names = []
         self.model = None
@@ -46,4 +47,7 @@ class FaceRecognizer:
     def process_image(self, input_img):
         """It recognizes faces on the image"""
         pass
-        
+
+    def normalize_image(self, image):
+        """It implements an adaptive histogram equalization to the image"""
+        return self.clahe.apply(image)

@@ -43,7 +43,7 @@ class FisherFacesRecognizer(FaceRecognizer):
             h = face_i[3] * RESIZE_FACTOR
             face = gray[y:y + h, x:x + w]
             face_resized = cv2.resize(face, (resized_width, resized_height))
-            confidence = self.model.predict(face_resized)
+            confidence = self.model.predict(self.normalize_image(face_resized))
             if confidence[1] < 300:
                 person = self.names[confidence[0]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 3)
