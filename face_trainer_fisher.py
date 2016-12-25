@@ -16,15 +16,11 @@ class FisherFaceTrainer(FaceTrainer):
         super(FisherFaceTrainer, self).__init__(face_name, face_dir, casc_path)
         self.model = cv2.createFisherFaceRecognizer()
 
-    def capture_training_images(self, webcam_id, training_data_path):
+    def capture_training_images(self, webcam_id):
         """It captures video from a webcame with a given id"""
         try:
             capturer = VideoCapturer(webcam_id)
             capturer.capture(self.process_image)
-            if self.are_enough_faces():
-                self.train_data(training_data_path)
-            else:
-                print("One more user needed to start recognition!")
         except ValueError as err:
             print("Error occure: {0}".format(err))
 
@@ -46,4 +42,7 @@ class FisherFaceTrainer(FaceTrainer):
 
     def train_data(self, training_data_path):
         """It trains classifier"""
-        super(FisherFaceTrainer, self).train_data(training_data_path)
+        if self.are_enough_faces():
+            super(FisherFaceTrainer, self).train_data(training_data_path)
+        else:
+            print("One more user needed to start recognition!")

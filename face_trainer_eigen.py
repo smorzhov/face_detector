@@ -11,9 +11,9 @@ class EigenFaceTrainer(FaceTrainer):
         self.model = cv2.createEigenFaceRecognizer()
 
 
-    def capture_training_images(self, webcam_id, training_data_path):
+    def capture_training_images(self, webcam_id):
         """It captures video from a webcame with a given id"""
-        super(EigenFaceTrainer, self).capture_training_images(webcam_id, training_data_path)
+        super(EigenFaceTrainer, self).capture_training_images(webcam_id)
 
     def process_image(self, input_img):
         """It detects face on the image"""

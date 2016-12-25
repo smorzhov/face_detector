@@ -4,9 +4,9 @@ import cv2
 import numpy as np
 from video_capturer import VideoCapturer
 
-FREQ_DIV = 5  # frequency divider for capturing training images
+FREQ_DIV = 2  # frequency divider for capturing training images
 RESIZE_FACTOR = 4
-NUM_TRAINING = 100
+NUM_TRAINING = 500
 
 class FaceTrainer:
     """Base face trainer class"""
@@ -20,21 +20,21 @@ class FaceTrainer:
         self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         self.face_dir = face_dir
         self.face_name = face_name
-        self.path = os.path.join(self.face_dir, self.face_name)
-        if not os.path.isdir(self.path):
-            os.makedirs(self.path)
+        if (face_name is not None):
+            self.path = os.path.join(self.face_dir, self.face_name)
+            if not os.path.isdir(self.path):
+                os.makedirs(self.path)
         self.count_captures = 0
-        self.count_timer = -1
+        self.count_timer = 0
         self.model = None
 
 
     @abstractmethod
-    def capture_training_images(self, webcam_id, training_data_path):
+    def capture_training_images(self, webcam_id):
         """It captures video from a webcame with a given id"""
         try:
             capturer = VideoCapturer(webcam_id)
             capturer.capture(self.process_image)
-            self.train_data(training_data_path)
         except ValueError as err:
             print("Error occure: {0}".format(err))
 
@@ -75,7 +75,7 @@ class FaceTrainer:
                     self.path) if fn[0] != '.'] + [0])[-1] + 1
 
                 if self.count_timer % FREQ_DIV == 0:
-                    self.count_timer = -1
+                    self.count_timer = 0
                     cv2.imwrite('%s/%s.png' %
                                 (self.path, img_no), self.clahe.apply(face_resized))
                     self.count_captures += 1

@@ -12,7 +12,8 @@ def main():
     parser = argparse.ArgumentParser(
         description="It recognize people faces on the video")
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-t", "--train", nargs='?', help="train classifier")
+    group.add_argument("-t", "--train", nargs='?', help="store traininig data")
+    group.add_argument("-T", "--training", action="store_true", help="train classifier")
     group.add_argument("-r", "--recognize",
                        action="store_true", help="recognize people")
     types = parser.add_mutually_exclusive_group()
@@ -35,8 +36,11 @@ def main():
     if args.train:
         trainer = assign_trainer(algo_type, args.train, config)
         trainer.capture_training_images(
-            args.camera_id,
-            config[algo_type]['path'] + config[algo_type]['training_data'])
+            args.camera_id)
+        return
+    if args.training:
+        trainer = assign_trainer(algo_type, args.train, config)
+        trainer.train_data(config[algo_type]['path'] + config[algo_type]['training_data'])
         return
     if args.recognize:
         recognizer = assign_recognizer(algo_type, config)
