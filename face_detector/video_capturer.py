@@ -1,6 +1,5 @@
 import threading
 import Queue
-import numpy as np
 import cv2
 
 

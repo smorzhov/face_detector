@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 import os
 import cv2
 import numpy as np
-from video_capturer import VideoCapturer
+from face_detector.video_capturer import VideoCapturer
 
 FREQ_DIV = 2  # frequency divider for capturing training images
 RESIZE_FACTOR = 4
@@ -20,7 +20,7 @@ class FaceTrainer:
         self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         self.face_dir = face_dir
         self.face_name = face_name
-        if (face_name is not None):
+        if face_name is not None:
             self.path = os.path.join(self.face_dir, self.face_name)
             if not os.path.isdir(self.path):
                 os.makedirs(self.path)

@@ -1,10 +1,10 @@
 import argparse
 import json
 import io
-from face_trainer_eigen import EigenFaceTrainer
-from face_trainer_fisher import FisherFaceTrainer
-from face_recognizer_eigen import EigenFacesRecognizer
-from face_recognizer_fisher import FisherFacesRecognizer
+from face_detector.trainers.face_trainer_eigen import EigenFaceTrainer
+from face_detector.trainers.face_trainer_fisher import FisherFaceTrainer
+from face_detector.recognizers.face_recognizer_eigen import EigenFacesRecognizer
+from face_detector.recognizers.face_recognizer_fisher import FisherFacesRecognizer
 
 
 def main():

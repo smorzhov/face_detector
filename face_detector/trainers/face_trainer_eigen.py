@@ -1,5 +1,5 @@
 import cv2
-from face_trainer import FaceTrainer
+from face_detector.trainers.face_trainer import FaceTrainer
 
 
 class EigenFaceTrainer(FaceTrainer):

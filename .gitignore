@@ -6,8 +6,8 @@
 !.vscode/extensions.json
 
 # Project specific
-./eigen_face_data
-./fisher_face_data
+face_detector/eigen_face_data/*
+face_detector/fisher_face_data/*
 
 # Python
 # Byte-compiled / optimized / DLL files

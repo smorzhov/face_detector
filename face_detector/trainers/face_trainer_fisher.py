@@ -1,7 +1,7 @@
 import os
 import cv2
-from video_capturer import VideoCapturer
-from face_trainer import FaceTrainer
+from face_detector.video_capturer import VideoCapturer
+from face_detector.trainers.face_trainer import FaceTrainer
 
 
 FREQ_DIV = 5  # frequency divider for capturing training images
@@ -30,15 +30,12 @@ class FisherFaceTrainer(FaceTrainer):
 
     def are_enough_faces(self):
         """Were there enough faces captured"""
-        existingFaces = 0
-        for (subdirs, dirs, files) in os.walk(self.face_dir):
-            for subdir in dirs:
-                existingFaces += 1
+        existing_faces = 0
+        for (_, dirs) in os.walk(self.face_dir):
+            for _ in dirs:
+                existing_faces += 1
 
-        if existingFaces > 1:
-            return True
-        else:
-            return False
+        return existing_faces > 1
 
     def train_data(self, training_data_path):
         """It trains classifier"""

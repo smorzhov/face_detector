@@ -6,12 +6,12 @@ Application that recognizes people faces using Eigen or Fisher algorithms
 
 You will need the following things properly installed on your computer.
 
-* [Python](https://www.python.org/)
+* [Python](https://www.python.org/) (v2.7)
 
 ## Installation
 
-* `git clone https://github.com/smorzhov/tent_map.git` this repository
-* `cd tent_map`
+* `git clone https://github.com/smorzhov/face_detector.git` this repository
+* `cd face_detector`
 * `pip install -r requirements.txt`
 
 ## Running

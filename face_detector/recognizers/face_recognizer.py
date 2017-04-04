@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 import sys
 import os
 import cv2
-from video_capturer import VideoCapturer
+from face_detector.video_capturer import VideoCapturer
 
 class FaceRecognizer:
     """Base class for face recognizer"""

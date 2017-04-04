@@ -1,5 +1,5 @@
 import cv2
-from face_recognizer import FaceRecognizer
+from face_detector.recognizers.face_recognizer import FaceRecognizer
 
 RESIZE_FACTOR = 4
 

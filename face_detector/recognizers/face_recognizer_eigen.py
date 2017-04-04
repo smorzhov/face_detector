@@ -1,9 +1,5 @@
-import numpy as np
 import cv2
-import sys
-import os
-from video_capturer import VideoCapturer
-from face_recognizer import FaceRecognizer
+from face_detector.recognizers.face_recognizer import FaceRecognizer
 
 RESIZE_FACTOR = 4
 

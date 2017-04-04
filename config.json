@@ -1,15 +1,15 @@
 {
     "eigen": 
     {
-        "path": "./eigen_face_data/",
+        "path": "./face_detector/eigen_face_data/",
         "face_data": "face_data",
         "training_data": "eigen_trained_data.xml" 
     },
     "fisher": 
     {
-        "path": "./fisher_face_data/",
+        "path": "./face_detector/fisher_face_data/",
         "face_data": "face_data",
         "training_data": "fisher_trained_data.xml"
     },
-    "cascade_path": "haarcascade_frontalface_default.xml"
+    "cascade_path": "./face_detector/haarcascade_frontalface_default.xml"
 }
